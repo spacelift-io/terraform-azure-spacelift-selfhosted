@@ -22,3 +22,8 @@ module "container_storage" {
   resource_group = azurerm_resource_group.rg
   app_domain     = var.app_domain
 }
+
+module "network" {
+  source         = "./modules/network"
+  resource_group = azurerm_resource_group.rg
+}
