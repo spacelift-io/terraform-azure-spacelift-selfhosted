@@ -78,7 +78,7 @@ resource "azurerm_postgresql_flexible_server" "postgres" {
 
   authentication {
     active_directory_auth_enabled = true
-    tenant_id                     = var.current_tenant_id
+    tenant_id                     = var.tenant_id
   }
 
   depends_on = [azurerm_private_dns_zone_virtual_network_link.default]

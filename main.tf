@@ -31,7 +31,7 @@ module "network" {
 module "postgres" {
   source = "./modules/postgres"
 
-  current_tenant_id = data.azurerm_client_config.current.tenant_id
+  tenant_id = data.azurerm_client_config.current.tenant_id
   k8s_pods_cidr     = "*" # TODO
   resource_group    = azurerm_resource_group.rg
   seed              = random_string.seed.result

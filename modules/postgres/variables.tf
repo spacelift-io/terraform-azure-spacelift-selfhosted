@@ -2,7 +2,7 @@ variable "seed" {
   type = string
 }
 
-variable "current_tenant_id" {
+variable "tenant_id" {
   type = string
 }
 
