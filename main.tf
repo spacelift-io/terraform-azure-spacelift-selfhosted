@@ -10,8 +10,7 @@ resource "azurerm_resource_group" "rg" {
 }
 
 module "container_registry" {
-  source                        = "./modules/container_registry"
-  azure_resource_group_location = azurerm_resource_group.rg.location
-  azure_resource_group_name     = azurerm_resource_group.rg.name
-  seed                          = random_string.seed.result
+  source         = "./modules/container_registry"
+  seed           = random_string.seed.result
+  resource_group = azurerm_resource_group.rg
 }
