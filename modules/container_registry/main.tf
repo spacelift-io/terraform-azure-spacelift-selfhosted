@@ -12,3 +12,10 @@ resource "azurerm_container_registry" "self_hosted_public" {
   sku                    = "Standard"
   anonymous_pull_enabled = true
 }
+
+resource "azurerm_role_assignment" "kube_pull_acr" {
+  scope                            = azurerm_container_registry.self_hosted.id
+  role_definition_name             = "AcrPull"
+  principal_id                     = var.kubernetes_object_id
+  skip_service_principal_aad_check = true
+}

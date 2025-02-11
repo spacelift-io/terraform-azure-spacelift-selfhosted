@@ -27,16 +27,3 @@ resource "azurerm_kubernetes_cluster" "self-hosted" {
     Environment = "azure-self-hosted"
   }
 }
-
-resource "azurerm_role_assignment" "kube_access_object_storage" {
-  scope                = var.storage_account_id
-  role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = azurerm_kubernetes_cluster.self-hosted.kubelet_identity[0].object_id
-}
-
-resource "azurerm_role_assignment" "kube_pull_acr" {
-  scope                            = var.container_registry_id
-  role_definition_name             = "AcrPull"
-  principal_id                     = azurerm_kubernetes_cluster.self-hosted.kubelet_identity[0].object_id
-  skip_service_principal_aad_check = true
-}

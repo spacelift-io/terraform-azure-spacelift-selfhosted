@@ -9,3 +9,7 @@ variable "resource_group" {
   })
   description = "Azure resource group that will be used for the registries."
 }
+
+variable "kubernetes_object_id" {
+  type = string
+}

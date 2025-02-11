@@ -120,3 +120,9 @@ resource "azurerm_storage_management_policy" "large_queue_messages_policy" {
     }
   }
 }
+
+resource "azurerm_role_assignment" "kube_access_object_storage" {
+  scope                = azurerm_storage_account.spacelift_storage_account.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = var.kubernetes_object_id
+}

@@ -10,17 +10,19 @@ resource "azurerm_resource_group" "rg" {
 }
 
 module "container_registry" {
-  source         = "./modules/container_registry"
-  seed           = random_string.seed.result
-  resource_group = azurerm_resource_group.rg
+  source               = "./modules/container_registry"
+  seed                 = random_string.seed.result
+  resource_group       = azurerm_resource_group.rg
+  kubernetes_object_id = module.aks.kubernetes_object_id
 }
 
 
 module "container_storage" {
-  source         = "./modules/container_storage"
-  seed           = random_string.seed.result
-  resource_group = azurerm_resource_group.rg
-  app_domain     = var.app_domain
+  source               = "./modules/container_storage"
+  seed                 = random_string.seed.result
+  resource_group       = azurerm_resource_group.rg
+  app_domain           = var.app_domain
+  kubernetes_object_id = module.aks.kubernetes_object_id
 }
 
 module "network" {
