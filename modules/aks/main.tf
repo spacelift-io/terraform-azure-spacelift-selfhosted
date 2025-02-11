@@ -5,18 +5,18 @@ resource "azurerm_kubernetes_cluster" "self-hosted" {
   dns_prefix          = "spacelift${var.seed}"
 
   default_node_pool {
-    name       = "default"
-    node_count = 3
-    vm_size    = "Standard_A2_v2"
+    name           = "default"
+    node_count     = 3
+    vm_size        = "Standard_A2_v2"
     vnet_subnet_id = var.subnet_id
   }
   network_profile {
-    ip_versions = ["IPv4"]
-    network_plugin = "azure"
+    ip_versions         = ["IPv4"]
+    network_plugin      = "azure"
     network_plugin_mode = "overlay"
-    pod_cidr = "10.244.0.0/20"
-    service_cidr = "10.0.0.0/22"
-    dns_service_ip = "10.0.0.10"
+    pod_cidr            = "10.244.0.0/20"
+    service_cidr        = "10.0.0.0/22"
+    dns_service_ip      = "10.0.0.10"
   }
 
   identity {
@@ -26,4 +26,17 @@ resource "azurerm_kubernetes_cluster" "self-hosted" {
   tags = {
     Environment = "azure-self-hosted"
   }
+}
+
+resource "azurerm_role_assignment" "kube_access_object_storage" {
+  scope                = var.storage_account_id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = azurerm_kubernetes_cluster.self-hosted.kubelet_identity[0].object_id
+}
+
+resource "azurerm_role_assignment" "kube_pull_acr" {
+  scope                            = var.container_registry_id
+  role_definition_name             = "AcrPull"
+  principal_id                     = azurerm_kubernetes_cluster.self-hosted.kubelet_identity[0].object_id
+  skip_service_principal_aad_check = true
 }

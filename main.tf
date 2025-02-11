@@ -29,10 +29,12 @@ module "network" {
 }
 
 module "aks" {
-  source         = "./modules/aks"
-  resource_group = azurerm_resource_group.rg
-  seed           = random_string.seed.result
-  subnet_id      = module.network.subnet_id
+  source                = "./modules/aks"
+  resource_group        = azurerm_resource_group.rg
+  seed                  = random_string.seed.result
+  subnet_id             = module.network.subnet_id
+  container_registry_id = module.container_registry.container_registry_id
+  storage_account_id    = module.container_storage.storage_account_id
 }
 
 module "postgres" {
