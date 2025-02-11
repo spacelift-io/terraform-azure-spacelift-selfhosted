@@ -45,4 +45,12 @@ module "postgres" {
   virtual_network = module.network.virtual_network
 }
 
+module "secrets" {
+  source            = "./modules/secrets"
+  client_config     = data.azurerm_client_config.current
+  postgres_password = module.postgres.postgres_password
+  resource_group    = azurerm_resource_group.rg
+  seed              = random_string.seed.result
+}
+
 data "azurerm_client_config" "current" {}
