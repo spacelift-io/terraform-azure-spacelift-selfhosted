@@ -7,10 +7,10 @@ resource "azurerm_storage_account" "spacelift_storage_account" {
   blob_properties {
     versioning_enabled = true
     cors_rule {
-      allowed_headers = ["*"]
-      allowed_methods = ["PUT", "POST"]
-      allowed_origins = ["https://${var.app_domain}"]
-      exposed_headers = ["*"]
+      allowed_headers    = ["*"]
+      allowed_methods    = ["PUT", "POST"]
+      allowed_origins    = ["https://${var.app_domain}"]
+      exposed_headers    = ["*"]
       max_age_in_seconds = 3600
     }
   }
@@ -33,7 +33,7 @@ locals {
 
 resource "azurerm_storage_container" "spacelift-container" {
   for_each = toset(local.containers)
-  name = each.value
+  name     = each.value
 
   storage_account_name  = azurerm_storage_account.spacelift_storage_account.name
   container_access_type = "private"
@@ -122,7 +122,8 @@ resource "azurerm_storage_management_policy" "large_queue_messages_policy" {
 }
 
 resource "azurerm_role_assignment" "kube_access_object_storage" {
-  scope                = azurerm_storage_account.spacelift_storage_account.id
-  role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = var.kubernetes_object_id
+  scope                            = azurerm_storage_account.spacelift_storage_account.id
+  role_definition_name             = "Storage Blob Data Contributor"
+  principal_id                     = var.kubernetes_object_id
+  skip_service_principal_aad_check = true
 }
