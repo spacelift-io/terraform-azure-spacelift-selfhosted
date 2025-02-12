@@ -10,6 +10,6 @@ variable "resource_group" {
   description = "Azure resource group that will be used for the registries."
 }
 
-variable "kubernetes_object_id" {
+variable "node_principal_id" {
   type = string
 }

@@ -10,10 +10,10 @@ resource "azurerm_resource_group" "rg" {
 }
 
 module "container_registry" {
-  source               = "./modules/container_registry"
-  seed                 = random_string.seed.result
-  resource_group       = azurerm_resource_group.rg
-  kubernetes_object_id = module.aks.kubernetes_object_id
+  source            = "./modules/container_registry"
+  seed              = random_string.seed.result
+  resource_group    = azurerm_resource_group.rg
+  node_principal_id = module.aks.node_principal_id
 }
 
 
@@ -22,7 +22,7 @@ module "container_storage" {
   seed                 = random_string.seed.result
   resource_group       = azurerm_resource_group.rg
   app_domain           = var.app_domain
-  kubernetes_object_id = module.aks.kubernetes_object_id
+  kubernetes_object_id = module.aks.node_principal_id
 }
 
 module "network" {
@@ -31,10 +31,10 @@ module "network" {
 }
 
 module "aks" {
-  source                = "./modules/aks"
-  resource_group        = azurerm_resource_group.rg
-  seed                  = random_string.seed.result
-  subnet_id             = module.network.subnet_id
+  source         = "./modules/aks"
+  resource_group = azurerm_resource_group.rg
+  seed           = random_string.seed.result
+  subnet_id      = module.network.subnet_id
 }
 
 module "postgres" {

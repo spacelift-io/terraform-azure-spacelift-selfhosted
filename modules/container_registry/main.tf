@@ -16,6 +16,6 @@ resource "azurerm_container_registry" "self_hosted_public" {
 resource "azurerm_role_assignment" "kube_pull_acr" {
   scope                            = azurerm_container_registry.self_hosted.id
   role_definition_name             = "AcrPull"
-  principal_id                     = var.kubernetes_object_id
+  principal_id                     = var.node_principal_id
   skip_service_principal_aad_check = true
 }
