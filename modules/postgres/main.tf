@@ -82,6 +82,10 @@ resource "azurerm_postgresql_flexible_server" "postgres" {
   }
 
   depends_on = [azurerm_private_dns_zone_virtual_network_link.default]
+
+  lifecycle {
+    ignore_changes = [zone]
+  }
 }
 
 resource "azurerm_postgresql_flexible_server_configuration" "max_connections" {
