@@ -35,6 +35,9 @@ module "aks" {
   resource_group = azurerm_resource_group.rg
   seed           = random_string.seed.result
   subnet_id      = module.network.subnet_id
+  default_node_pool = {
+    vnet_subnet_id = module.network.subnet_id
+  }
 }
 
 module "postgres" {

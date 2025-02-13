@@ -5,16 +5,19 @@ resource "azurerm_kubernetes_cluster" "self-hosted" {
   dns_prefix          = "spacelift${var.seed}"
 
   default_node_pool {
-    name           = "default"
-    node_count     = var.node_count
-    vm_size        = var.vm_size
-    vnet_subnet_id = var.subnet_id
+    name                        = var.default_node_pool.name
+    temporary_name_for_rotation = var.default_node_pool.temporary_name_for_rotation
+    node_count                  = var.default_node_pool.node_count
+    min_count                   = var.default_node_pool.min_count
+    max_count                   = var.default_node_pool.max_count
+    vm_size                     = var.default_node_pool.vm_size
+    vnet_subnet_id              = var.default_node_pool.vnet_subnet_id
     upgrade_settings {
-      max_surge = "10"
+      max_surge = var.default_node_pool.upgrade_settings_max_surge
     }
   }
   network_profile {
-    ip_versions = ["IPv4"]
+    ip_versions         = ["IPv4"]
     network_plugin      = "azure"
     network_plugin_mode = "overlay"
     pod_cidr            = "10.244.0.0/20"
