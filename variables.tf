@@ -9,3 +9,7 @@ variable "resource_group_name" {
 variable "app_domain" {
   type = string
 }
+
+variable "subscription_id" {
+  type = string
+}
