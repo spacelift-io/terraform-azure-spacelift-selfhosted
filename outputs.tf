@@ -10,7 +10,7 @@ output "resource_group_name" {
 
 
 # ### Network ###
-output "gke_cluster_name" {
+output "aks_cluster_name" {
   value       = module.aks.cluster_name
   description = "Name of the AKS cluster"
 }
