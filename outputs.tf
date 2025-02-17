@@ -85,6 +85,7 @@ output "shell" {
     env : {
       AZURE_SUBSCRIPTION_ID : var.subscription_id,
       AZURE_LOCATION : var.location,
+      AZURE_RESOURCE_GROUP_NAME: var.resource_group_name
       SERVER_DOMAIN : var.app_domain,
       WEBHOOKS_ENDPOINT : "https://${var.app_domain}/webhooks",
 
@@ -94,7 +95,7 @@ output "shell" {
       # Artifacts
       PRIVATE_CONTAINER_REGISTRY_NAME : module.container_registry.private_registry_name,
       PUBLIC_CONTAINER_REGISTRY_NAME : module.container_registry.public_registry_name,
-      BACKEND_IMAGE : "${module.container_registry.public_registry_url}/spacelift-backend",
+      BACKEND_IMAGE : "${module.container_registry.private_registry_url}/spacelift-backend",
       LAUNCHER_IMAGE : "${module.container_registry.public_registry_url}/spacelift-launcher"
 
       # Buckets
