@@ -85,7 +85,7 @@ output "shell" {
     env : {
       AZURE_SUBSCRIPTION_ID : var.subscription_id,
       AZURE_LOCATION : var.location,
-      AZURE_RESOURCE_GROUP_NAME: var.resource_group_name
+      AZURE_RESOURCE_GROUP_NAME : var.resource_group_name
       SERVER_DOMAIN : var.app_domain,
       WEBHOOKS_ENDPOINT : "https://${var.app_domain}/webhooks",
 
@@ -112,10 +112,11 @@ output "shell" {
       OBJECT_STORAGE_BUCKET_UPLOADS_URL              = ""
 
       # Database
-      DB_CONNECTION_URL= "postgres://postgres:${module.postgres.postgres_password}@$POSTGRES_ADDRESS/postgres?sslmode=verify-full"
+      DB_CONNECTION_URL = "postgres://postgres:${module.postgres.postgres_password}@$POSTGRES_ADDRESS/postgres?sslmode=verify-full"
 
       #AKS
       AKS_CLUSTER_NAME = module.aks.cluster_name
+      K8S_NAMESPACE    = var.k8s_namespace
     },
   })
 }
