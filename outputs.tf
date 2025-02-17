@@ -85,7 +85,7 @@ output "shell" {
     env : {
       AZURE_SUBSCRIPTION_ID : var.subscription_id,
       AZURE_LOCATION : var.location,
-      AZURE_RESOURCE_GROUP_NAME : var.resource_group_name
+      AZURE_RESOURCE_GROUP_NAME : var.resource_group_name,
       SERVER_DOMAIN : var.app_domain,
       WEBHOOKS_ENDPOINT : "https://${var.app_domain}/webhooks",
 
@@ -96,7 +96,7 @@ output "shell" {
       PRIVATE_CONTAINER_REGISTRY_NAME : module.container_registry.private_registry_name,
       PUBLIC_CONTAINER_REGISTRY_NAME : module.container_registry.public_registry_name,
       BACKEND_IMAGE : "${module.container_registry.private_registry_url}/spacelift-backend",
-      LAUNCHER_IMAGE : "${module.container_registry.public_registry_url}/spacelift-launcher"
+      LAUNCHER_IMAGE : "${module.container_registry.public_registry_url}/spacelift-launcher",
 
       # Buckets
       OBJECT_STORAGE_BUCKET_DELIVERIES               = module.container_storage.deliveries_container,
@@ -107,16 +107,17 @@ output "shell" {
       OBJECT_STORAGE_BUCKET_STATES                   = module.container_storage.states_container,
       OBJECT_STORAGE_BUCKET_USER_UPLOADED_WORKSPACES = module.container_storage.user_uploaded_workspaces_container,
       OBJECT_STORAGE_BUCKET_WORKSPACE                = module.container_storage.workspaces_container,
-      OBJECT_STORAGE_BUCKET_METADATA                 = module.container_storage.metadata_container
-      OBJECT_STORAGE_BUCKET_UPLOADS                  = module.container_storage.uploads_container
-      OBJECT_STORAGE_BUCKET_UPLOADS_URL              = ""
+      OBJECT_STORAGE_BUCKET_METADATA                 = module.container_storage.metadata_container,
+      OBJECT_STORAGE_BUCKET_UPLOADS                  = module.container_storage.uploads_container,
+      OBJECT_STORAGE_BUCKET_UPLOADS_URL = ""
 
       # Database
-      DB_CONNECTION_URL = "postgres://postgres:${module.postgres.postgres_password}@$POSTGRES_ADDRESS/postgres?sslmode=verify-full"
+      DB_CONNECTION_URL = "postgres://postgres:${module.postgres.postgres_password}@$POSTGRES_ADDRESS/postgres?sslmode=verify-full",
 
       #AKS
-      AKS_CLUSTER_NAME = module.aks.cluster_name
-      K8S_NAMESPACE    = var.k8s_namespace
+      AKS_CLUSTER_NAME     = module.aks.cluster_name,
+      K8S_NAMESPACE        = var.k8s_namespace,
+      MQTT_BROKER_ENDPOINT = "spacelift-mqtt.${var.k8s_namespace}.svc.cluster.local."
     },
   })
 }
