@@ -118,6 +118,7 @@ output "shell" {
       AKS_CLUSTER_NAME     = module.aks.cluster_name,
       K8S_NAMESPACE        = var.k8s_namespace,
       MQTT_BROKER_ENDPOINT = "spacelift-mqtt.${var.k8s_namespace}.svc.cluster.local."
+      STORAGE_ACCOUNT_URL = module.container_storage.storage_account_url
     },
   })
 }
