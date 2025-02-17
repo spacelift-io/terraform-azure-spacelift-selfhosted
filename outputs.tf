@@ -109,15 +109,14 @@ output "shell" {
       OBJECT_STORAGE_BUCKET_WORKSPACE                = module.container_storage.workspaces_container,
       OBJECT_STORAGE_BUCKET_METADATA                 = module.container_storage.metadata_container,
       OBJECT_STORAGE_BUCKET_UPLOADS                  = module.container_storage.uploads_container,
-      OBJECT_STORAGE_BUCKET_UPLOADS_URL = ""
 
       # Database
-      DB_CONNECTION_URL = "postgres://postgres:${module.postgres.postgres_password}@$POSTGRES_ADDRESS/postgres?sslmode=verify-full",
+      DB_CONNECTION_URL = "postgres://postgres:${module.postgres.postgres_password}@${module.postgres.postgres_address}/postgres?sslmode=verify-full",
 
       #AKS
       AKS_CLUSTER_NAME     = module.aks.cluster_name,
       K8S_NAMESPACE        = var.k8s_namespace,
-      MQTT_BROKER_ENDPOINT = "spacelift-mqtt.${var.k8s_namespace}.svc.cluster.local."
+      MQTT_BROKER_ENDPOINT = "spacelift-mqtt.${var.k8s_namespace}.svc.cluster.local.",
       STORAGE_ACCOUNT_URL = module.container_storage.storage_account_url
     },
   })
