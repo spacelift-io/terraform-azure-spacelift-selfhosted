@@ -10,11 +10,6 @@ output "resource_group_name" {
 
 
 ### Network ###
-output "aks_public_v4_address" {
-  value       = module.network.public_ip_address
-  description = "Public IPv4 address for AKS Ingresses"
-}
-
 output "virtual_network_id" {
   value       = module.network.virtual_network.id
   description = "ID of the virtual network that is used to deploy Spacelift"
@@ -113,6 +108,11 @@ output "aks_cluster_name" {
   description = "Name of the AKS cluster"
 }
 
+output "aks_public_v4_address" {
+  value       = module.aks.public_ip_address
+  description = "Public IPv4 address for AKS Ingresses"
+}
+
 output "shell" {
   sensitive = true
   value = templatefile("${path.module}/env.tftpl", {
@@ -124,7 +124,7 @@ output "shell" {
       WEBHOOKS_ENDPOINT : "https://${var.app_domain}/webhooks",
 
       # Network
-      PUBLIC_IP_ADDRESS : module.network.public_ip_address,
+      PUBLIC_IP_ADDRESS : module.aks.public_ip_address,
 
       # Container registry
       PRIVATE_CONTAINER_REGISTRY_NAME : module.container_registry.private_registry_name,

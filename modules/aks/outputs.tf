@@ -9,3 +9,7 @@ output "node_principal_id" {
 output "cluster_name" {
   value = azurerm_kubernetes_cluster.self-hosted.name
 }
+
+output "public_ip_address" {
+  value = azurerm_public_ip.ipv4.ip_address
+}
