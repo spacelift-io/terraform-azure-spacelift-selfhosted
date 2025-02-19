@@ -5,7 +5,3 @@ output "virtual_network" {
 output "subnet" {
   value = azurerm_subnet.spacelift
 }
-
-output "public_ip_address" {
-  value = azurerm_public_ip.ipv4.ip_address
-}
