@@ -9,15 +9,20 @@ output "resource_group_name" {
 }
 
 
-# ### Network ###
-output "aks_cluster_name" {
-  value       = module.aks.cluster_name
-  description = "Name of the AKS cluster"
-}
-#
+### Network ###
 output "aks_public_v4_address" {
   value       = module.network.public_ip_address
   description = "Public IPv4 address for AKS Ingresses"
+}
+
+output "virtual_network_id" {
+  value       = module.network.virtual_network.id
+  description = "ID of the virtual network that is used to deploy Spacelift"
+}
+
+output "subnet_id" {
+  value       = module.network.subnet_id
+  description = "ID of the subnet that is used for the Spacelift AKS cluster"
 }
 
 ### Database ###
@@ -28,7 +33,18 @@ output "db_root_password" {
   sensitive   = true
 }
 
+
+output "db_name" {
+  value       = module.postgres.postgres_name
+  description = "The name of the postgres server"
+}
+
 ### Storage ###
+output "container_storage_account_name" {
+  value       = module.container_storage.storage_account_name
+  description = "The name of the storage account"
+}
+
 output "large_queue_messages_bucket" {
   value       = module.container_storage.large_queue_messages_container
   description = "Name of the bucket used for storing large queue messages"
@@ -79,6 +95,24 @@ output "deliveries_bucket" {
   description = "Name of the bucket used for storing audit trail delivery data"
 }
 
+### Container registry ###
+
+output "public_container_registry_name" {
+  value       = module.container_registry.public_registry_name
+  description = "Name of the public container registry"
+}
+
+output "private_container_registry_name" {
+  value       = module.container_registry.public_registry_name
+  description = "Name of the private container registry"
+}
+
+### AKS ###
+output "aks_cluster_name" {
+  value       = module.aks.cluster_name
+  description = "Name of the AKS cluster"
+}
+
 output "shell" {
   sensitive = true
   value = templatefile("${path.module}/env.tftpl", {
@@ -92,7 +126,7 @@ output "shell" {
       # Network
       PUBLIC_IP_ADDRESS : module.network.public_ip_address,
 
-      # Artifacts
+      # Container registry
       PRIVATE_CONTAINER_REGISTRY_NAME : module.container_registry.private_registry_name,
       PUBLIC_CONTAINER_REGISTRY_NAME : module.container_registry.public_registry_name,
       BACKEND_IMAGE : "${module.container_registry.private_registry_url}/spacelift-backend",
@@ -117,7 +151,7 @@ output "shell" {
       AKS_CLUSTER_NAME     = module.aks.cluster_name,
       K8S_NAMESPACE        = var.k8s_namespace,
       MQTT_BROKER_ENDPOINT = "spacelift-mqtt.${var.k8s_namespace}.svc.cluster.local.",
-      STORAGE_ACCOUNT_URL = module.container_storage.storage_account_url
+      STORAGE_ACCOUNT_URL  = module.container_storage.storage_account_url
     },
   })
 }

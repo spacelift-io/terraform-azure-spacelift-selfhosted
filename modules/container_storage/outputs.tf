@@ -41,3 +41,7 @@ output "deliveries_container" {
 output "storage_account_url" {
   value = trimsuffix(azurerm_storage_account.spacelift_storage_account.primary_blob_endpoint, "/")
 }
+
+output "storage_account_name" {
+  value = azurerm_storage_account.spacelift_storage_account.name
+}
