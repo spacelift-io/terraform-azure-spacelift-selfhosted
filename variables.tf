@@ -13,3 +13,8 @@ variable "app_domain" {
 variable "subscription_id" {
   type = string
 }
+
+variable "k8s_namespace" {
+  type = string
+  default = "spacelift"
+}
