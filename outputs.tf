@@ -145,7 +145,7 @@ output "shell" {
       OBJECT_STORAGE_BUCKET_UPLOADS                  = module.container_storage.uploads_container,
 
       # Database
-      DB_CONNECTION_URL = "postgres://postgres:${urlencode(${module.postgres.postgres_password})}@${module.postgres.postgres_address}/postgres?sslmode=verify-full",
+      DB_CONNECTION_URL = "postgres://postgres:${urlencode(module.postgres.postgres_password)}@${module.postgres.postgres_address}/postgres?sslmode=verify-full",
 
       #AKS
       AKS_CLUSTER_NAME     = module.aks.cluster_name,
