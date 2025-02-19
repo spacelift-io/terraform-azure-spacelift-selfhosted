@@ -21,7 +21,7 @@ output "virtual_network_id" {
 }
 
 output "subnet_id" {
-  value       = module.network.subnet_id
+  value       = module.network.subnet.id
   description = "ID of the subnet that is used for the Spacelift AKS cluster"
 }
 
