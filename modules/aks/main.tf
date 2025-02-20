@@ -33,3 +33,16 @@ resource "azurerm_kubernetes_cluster" "self-hosted" {
     Environment = "azure-self-hosted"
   }
 }
+
+resource "azurerm_public_ip" "ipv4" {
+  name                = "ipv4"
+  resource_group_name = azurerm_kubernetes_cluster.self-hosted.node_resource_group
+  location            = var.resource_group.location
+  allocation_method   = "Static"
+  ip_version          = "IPv4"
+  sku                 = "Standard"
+
+  tags = {
+    environment = "azure-self-hosted"
+  }
+}

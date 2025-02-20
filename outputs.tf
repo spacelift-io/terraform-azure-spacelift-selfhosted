@@ -10,11 +10,6 @@ output "resource_group_name" {
 
 
 ### Network ###
-output "aks_public_v4_address" {
-  value       = module.network.public_ip_address
-  description = "Public IPv4 address for AKS Ingresses"
-}
-
 output "virtual_network_id" {
   value       = module.network.virtual_network.id
   description = "ID of the virtual network that is used to deploy Spacelift"
@@ -96,7 +91,6 @@ output "deliveries_bucket" {
 }
 
 ### Container registry ###
-
 output "public_container_registry_name" {
   value       = module.container_registry.public_registry_name
   description = "Name of the public container registry"
@@ -113,6 +107,11 @@ output "aks_cluster_name" {
   description = "Name of the AKS cluster"
 }
 
+output "aks_public_v4_address" {
+  value       = module.aks.public_ip_address
+  description = "Public IPv4 address for AKS Ingresses"
+}
+
 output "shell" {
   sensitive = true
   value = templatefile("${path.module}/env.tftpl", {
@@ -122,9 +121,6 @@ output "shell" {
       AZURE_RESOURCE_GROUP_NAME : var.resource_group_name,
       SERVER_DOMAIN : var.app_domain,
       WEBHOOKS_ENDPOINT : "https://${var.app_domain}/webhooks",
-
-      # Network
-      PUBLIC_IP_ADDRESS : module.network.public_ip_address,
 
       # Container registry
       PRIVATE_CONTAINER_REGISTRY_NAME : module.container_registry.private_registry_name,
@@ -143,15 +139,16 @@ output "shell" {
       OBJECT_STORAGE_BUCKET_WORKSPACE                = module.container_storage.workspaces_container,
       OBJECT_STORAGE_BUCKET_METADATA                 = module.container_storage.metadata_container,
       OBJECT_STORAGE_BUCKET_UPLOADS                  = module.container_storage.uploads_container,
+      STORAGE_ACCOUNT_URL                            = module.container_storage.storage_account_url
 
       # Database
       DB_CONNECTION_URL = "postgres://postgres:${urlencode(module.postgres.postgres_password)}@${module.postgres.postgres_address}/postgres?sslmode=verify-full",
 
       #AKS
-      AKS_CLUSTER_NAME     = module.aks.cluster_name,
-      K8S_NAMESPACE        = var.k8s_namespace,
+      AKS_CLUSTER_NAME = module.aks.cluster_name,
+      K8S_NAMESPACE    = var.k8s_namespace,
+      PUBLIC_IP_ADDRESS : module.aks.public_ip_address,
       MQTT_BROKER_ENDPOINT = "spacelift-mqtt.${var.k8s_namespace}.svc.cluster.local.",
-      STORAGE_ACCOUNT_URL  = module.container_storage.storage_account_url
     },
   })
 }
