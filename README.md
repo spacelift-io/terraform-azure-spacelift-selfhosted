@@ -35,6 +35,8 @@ The module creates:
     - a Postgres Flexible Server instance
 - Storage resources
     - various containers for storing run metadata, run logs, workspaces, stack states etc.
+- AKS cluster
+    - a Kubernetes cluster to install Spacelift on
 
 ### Inputs
 
@@ -69,6 +71,7 @@ The module creates:
 | user_uploaded_workspaces_bucket | Name of the bucket used for storing user uploaded workspaces. This is used for the local preview feature. |
 | workspace_bucket                | Name of the bucket used for storing stack workspace data.                                                 |
 | deliveries_bucket               | Name of the bucket used for storing audit trail delivery data.                                            |
+| shell                           | A list of shell variables to export to continue with the install process.                                 |
 
 ## 🚀 Release
 
