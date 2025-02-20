@@ -17,7 +17,7 @@ information on how to configure the state storage.
 module "spacelift" {
   source = "github.com/spacelift-io/terraform-azure-spacelift-selfhosted?ref=main"
 
-  app_domain          = "yourdomain.sh"
+  app_domain          = "spacelift.mycompany.com"
   location            = "polandcentral"
   resource_group_name = "testgrouptocreate"
   subscription_id     = "00000000-0000-0000-0000-000000000000"
