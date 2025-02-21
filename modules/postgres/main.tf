@@ -2,7 +2,7 @@ resource "azurerm_subnet" "postgres" {
   name                 = "spacelift-subnet-postgres"
   resource_group_name  = var.resource_group.name
   virtual_network_name = var.virtual_network.name
-  address_prefixes = ["10.30.0.0/24"]
+  address_prefixes     = ["10.30.0.0/24"]
 
   service_endpoints = ["Microsoft.Storage"]
 

@@ -8,8 +8,8 @@ variable "tenant_id" {
 
 variable "virtual_network" {
   type = object({
-    id: string
-    name: string
+    id : string
+    name : string
   })
   description = "Azure virtual network for database deployment."
 }
@@ -20,8 +20,8 @@ variable "k8s_pods_cidr" {
 
 variable "resource_group" {
   type = object({
-    name: string
-    location: string
+    name : string
+    location : string
   })
   description = "Azure resource group that will be used for the registries."
 }
