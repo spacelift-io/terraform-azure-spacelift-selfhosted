@@ -34,7 +34,6 @@ module "aks" {
   source         = "./modules/aks"
   resource_group = azurerm_resource_group.rg
   seed           = random_string.seed.result
-  subnet_id      = module.network.subnet.id
   default_node_pool = {
     vnet_subnet_id = module.network.subnet.id
   }
