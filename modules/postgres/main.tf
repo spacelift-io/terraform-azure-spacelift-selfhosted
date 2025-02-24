@@ -67,7 +67,7 @@ resource "azurerm_postgresql_flexible_server" "postgres" {
   location                      = var.resource_group.location
   resource_group_name           = var.resource_group.name
   private_dns_zone_id           = azurerm_private_dns_zone.spacelift-postgres.id
-  sku_name                      = "B_Standard_B1ms"
+  sku_name                      = var.flexible_server_sku_name
   storage_mb                    = 32768
   version                       = "14"
   public_network_access_enabled = false
@@ -91,5 +91,5 @@ resource "azurerm_postgresql_flexible_server" "postgres" {
 resource "azurerm_postgresql_flexible_server_configuration" "max_connections" {
   name      = "max_connections"
   server_id = azurerm_postgresql_flexible_server.postgres.id
-  value     = "1034"
+  value     = "200"
 }
