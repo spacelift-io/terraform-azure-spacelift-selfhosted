@@ -48,7 +48,7 @@ module "postgres" {
   resource_group           = azurerm_resource_group.rg
   seed                     = random_string.seed.result
   virtual_network          = module.network.virtual_network
-  flexible_server_sku_name = var.postgres_flexible_server_sku_name
+  flexible_server_sku_name = var.db_sku_name
 }
 
 data "azurerm_client_config" "current" {}
