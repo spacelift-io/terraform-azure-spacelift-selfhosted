@@ -41,7 +41,7 @@ variable "k8s_default_node_pool" {
     auto_scaling_enabled        = optional(bool, false)
     upgrade_settings_max_surge  = optional(string, "10")
   })
-  default = {}
+  default     = {}
   description = <<-EOT
   {
       name : "The name of the default k8s node pool"
