@@ -6,6 +6,6 @@ tests:
     runner_image: public.ecr.aws/spacelift/runner-terraform:azure-latest
     environment:
       TF_VAR_location: westeurope
-      TF_VAR_resource_group_name: self-hosted-v3-testing
+      TF_VAR_resource_group_name: self-hosted-v3-tf-testing
       TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID}}
       TF_VAR_app_domain: spacelift.mycorp.com
