@@ -8,4 +8,4 @@ tests:
       TF_VAR_location: westeurope
       TF_VAR_resource_group_name: self-hosted-v3-tf-testing
       TF_VAR_subscription_id: ${{ secrets.SUBSCRIPTION_ID}}
-      TF_VAR_app_domain: spacelift.mycorp.com
+      TF_VAR_app_domain: spacelift.example.com
