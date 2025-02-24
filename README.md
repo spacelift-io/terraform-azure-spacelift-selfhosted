@@ -40,12 +40,13 @@ The module creates:
 
 ### Inputs
 
-| Name                | Description                                                                                                          | Type   | Default   | Required |
-|---------------------|----------------------------------------------------------------------------------------------------------------------|--------|-----------|----------|
-| location            | The location in which the resources will be created.                                                                 | string | -         | yes      |
-| resource_group_name | The resource group name that will used for the created resources.                                                    | string | -         | yes      | | string      | -                 | yes      |
-| app_domain          | The domain under which the Spacelift instance will be hosted. This is used for the CORS rules of one of the buckets. | string | -         | yes      |
-| k8s_namespace       | The namespace in which the Spacelift backend service will be deployed.                                               | string | spacelift | no       |
+| Name                | Description                                                                                                          | Type   | Default        | Required |
+|---------------------|----------------------------------------------------------------------------------------------------------------------|--------|----------------|----------|
+| location            | The location in which the resources will be created.                                                                 | string | -              | yes      |
+| resource_group_name | The resource group name that will used for the created resources.                                                    | string | -              | yes      | 
+| app_domain          | The domain under which the Spacelift instance will be hosted. This is used for the CORS rules of one of the buckets. | string | -              | yes      |
+| k8s_namespace       | The namespace in which the Spacelift backend service will be deployed.                                               | string | spacelift      | no       |
+| db_sku_name         | The SKU name of the postgres flexible server.                                                                        | string | B_Standard_B2s | no       |
 
 ### Outputs
 

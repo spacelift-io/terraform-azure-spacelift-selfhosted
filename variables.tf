@@ -23,3 +23,9 @@ variable "k8s_namespace" {
   default     = "spacelift"
   description = "The namespace in which the Spacelift backend service will be deployed"
 }
+
+variable "db_sku_name" {
+  type        = string
+  default     = "B_Standard_B2s"
+  description = "The SKU name of the postgres flexible server"
+}

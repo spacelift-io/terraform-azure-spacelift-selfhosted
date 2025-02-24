@@ -43,11 +43,12 @@ module "aks" {
 module "postgres" {
   source = "./modules/postgres"
 
-  tenant_id       = data.azurerm_client_config.current.tenant_id
-  k8s_pods_cidr   = module.aks.pod_cidr
-  resource_group  = azurerm_resource_group.rg
-  seed            = random_string.seed.result
-  virtual_network = module.network.virtual_network
+  tenant_id                = data.azurerm_client_config.current.tenant_id
+  k8s_pods_cidr            = module.aks.pod_cidr
+  resource_group           = azurerm_resource_group.rg
+  seed                     = random_string.seed.result
+  virtual_network          = module.network.virtual_network
+  flexible_server_sku_name = var.postgres_flexible_server_sku_name
 }
 
 data "azurerm_client_config" "current" {}

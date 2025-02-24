@@ -6,6 +6,10 @@ variable "tenant_id" {
   type = string
 }
 
+variable "flexible_server_sku_name" {
+  type = string
+}
+
 variable "virtual_network" {
   type = object({
     id : string
