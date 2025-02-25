@@ -35,7 +35,16 @@ module "aks" {
   resource_group = azurerm_resource_group.rg
   seed           = random_string.seed.result
   default_node_pool = {
-    vnet_subnet_id = module.network.subnet.id
+    vnet_subnet_id              = module.network.subnet.id
+    temporary_name_for_rotation = var.k8s_default_node_pool.temporary_name_for_rotation
+    auto_scaling_enabled        = var.k8s_default_node_pool.auto_scaling_enabled
+    name                        = var.k8s_default_node_pool.name
+    node_count                  = var.k8s_default_node_pool.node_count
+    min_count                   = var.k8s_default_node_pool.min_count
+    max_count                   = var.k8s_default_node_pool.max_count
+    max_pods                    = var.k8s_default_node_pool.max_pods
+    upgrade_settings_max_surge  = var.k8s_default_node_pool.upgrade_settings_max_surge
+    vm_size                     = var.k8s_default_node_pool.vm_size
   }
 }
 
