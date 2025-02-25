@@ -17,6 +17,7 @@ variable "default_node_pool" {
     node_count                  = number
     min_count                   = optional(number)
     max_count                   = optional(number)
+    max_pods                    = optional(number)
     vm_size                     = string
     auto_scaling_enabled        = bool
     vnet_subnet_id              = string

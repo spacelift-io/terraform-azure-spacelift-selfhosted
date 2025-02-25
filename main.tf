@@ -42,6 +42,7 @@ module "aks" {
     node_count                  = var.k8s_default_node_pool.node_count
     min_count                   = var.k8s_default_node_pool.min_count
     max_count                   = var.k8s_default_node_pool.max_count
+    max_pods                    = var.k8s_default_node_pool.max_pods
     upgrade_settings_max_surge  = var.k8s_default_node_pool.upgrade_settings_max_surge
     vm_size                     = var.k8s_default_node_pool.vm_size
   }

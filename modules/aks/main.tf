@@ -11,6 +11,7 @@ resource "azurerm_kubernetes_cluster" "self-hosted" {
     node_count                  = var.default_node_pool.node_count
     min_count                   = var.default_node_pool.min_count
     max_count                   = var.default_node_pool.max_count
+    max_pods                    = var.default_node_pool.max_pods
     vm_size                     = var.default_node_pool.vm_size
     vnet_subnet_id              = var.default_node_pool.vnet_subnet_id
     upgrade_settings {
