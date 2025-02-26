@@ -36,7 +36,7 @@ The module creates:
 - Storage resources
     - various containers for storing run metadata, run logs, workspaces, stack states etc.
 - AKS cluster
-    - a Kubernetes cluster to install Spacelift on
+    - a Kubernetes auto-scaled cluster to install Spacelift on
 
 ### Inputs
 
