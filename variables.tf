@@ -34,9 +34,8 @@ variable "k8s_default_node_pool" {
   type = object({
     name                        = optional(string, "default")
     temporary_name_for_rotation = optional(string)
-    node_count                  = optional(number, 3)
-    min_count                   = optional(number)
-    max_count                   = optional(number)
+    min_count                   = optional(number, 1)
+    max_count                   = optional(number, 3)
     max_pods                    = optional(number)
     vm_size                     = optional(string, "Standard_A2_v2")
     auto_scaling_enabled        = optional(bool, false)
@@ -47,12 +46,10 @@ variable "k8s_default_node_pool" {
   {
       name : "The name of the default k8s node pool"
       temporary_name_for_rotation : "Specifies the name of the temporary node pool used to cycle the default node pool for VM resizing"
-      node_count : "The initial number of nodes which should exist in this Node Pool"
       min_count : "The minimum number of nodes which should exist in this Node Pool"
       max_count : "The maximum number of nodes which should exist in this Node Pool"
       max_pods: "The maximum number of pods that can run on each node"
       vm_size : "The size of the Virtual Machine"
-      auto_scaling_enabled : "Defines if the autoscaler should be enabled"
       upgrade_settings_max_surge : "The maximum number or percentage of nodes which will be added to the Node Pool size during an upgrade"
   }
   EOT
