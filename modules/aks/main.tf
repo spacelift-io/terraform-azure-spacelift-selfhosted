@@ -7,8 +7,7 @@ resource "azurerm_kubernetes_cluster" "self-hosted" {
   default_node_pool {
     name                        = var.default_node_pool.name
     temporary_name_for_rotation = var.default_node_pool.temporary_name_for_rotation
-    auto_scaling_enabled        = var.default_node_pool.auto_scaling_enabled
-    node_count                  = var.default_node_pool.node_count
+    auto_scaling_enabled        = true
     min_count                   = var.default_node_pool.min_count
     max_count                   = var.default_node_pool.max_count
     max_pods                    = var.default_node_pool.max_pods
@@ -29,6 +28,15 @@ resource "azurerm_kubernetes_cluster" "self-hosted" {
 
   identity {
     type = "SystemAssigned"
+  }
+
+  lifecycle {
+    # Just to filter noise out of plans
+    # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#auto_scaling_enabled-1
+    ignore_changes = [
+      default_node_pool.0.node_count,
+      default_node_pool.0.upgrade_settings,
+    ]
   }
 
   tags = {
