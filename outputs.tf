@@ -116,11 +116,8 @@ output "shell" {
   sensitive = true
   value = templatefile("${path.module}/env.tftpl", {
     env : {
-      AZURE_SUBSCRIPTION_ID : var.subscription_id,
-      AZURE_LOCATION : var.location,
+      SPACELIFT_VERSION : var.spacelift_version != null ? var.spacelift_version : "",
       AZURE_RESOURCE_GROUP_NAME : var.resource_group_name,
-      SERVER_DOMAIN : var.app_domain,
-      WEBHOOKS_ENDPOINT : "https://${var.app_domain}/webhooks",
 
       # Container registry
       PRIVATE_CONTAINER_REGISTRY_NAME : module.container_registry.private_registry_name,
@@ -128,27 +125,50 @@ output "shell" {
       BACKEND_IMAGE : "${module.container_registry.private_registry_url}/spacelift-backend",
       LAUNCHER_IMAGE : "${module.container_registry.public_registry_url}/spacelift-launcher",
 
-      # Buckets
-      OBJECT_STORAGE_BUCKET_DELIVERIES               = module.container_storage.deliveries_container,
-      OBJECT_STORAGE_BUCKET_LARGE_QUEUE_MESSAGES     = module.container_storage.large_queue_messages_container,
-      OBJECT_STORAGE_BUCKET_MODULES                  = module.container_storage.modules_container,
-      OBJECT_STORAGE_BUCKET_POLICY_INPUTS            = module.container_storage.policy_inputs_container,
-      OBJECT_STORAGE_BUCKET_RUN_LOGS                 = module.container_storage.run_logs_container,
-      OBJECT_STORAGE_BUCKET_STATES                   = module.container_storage.states_container,
-      OBJECT_STORAGE_BUCKET_USER_UPLOADED_WORKSPACES = module.container_storage.user_uploaded_workspaces_container,
-      OBJECT_STORAGE_BUCKET_WORKSPACE                = module.container_storage.workspaces_container,
-      OBJECT_STORAGE_BUCKET_METADATA                 = module.container_storage.metadata_container,
-      OBJECT_STORAGE_BUCKET_UPLOADS                  = module.container_storage.uploads_container,
-      STORAGE_ACCOUNT_URL                            = module.container_storage.storage_account_url
-
-      # Database
-      DB_CONNECTION_URL = "postgres://postgres:${urlencode(module.postgres.postgres_password)}@${module.postgres.postgres_address}/postgres?sslmode=verify-full",
-
       #AKS
       AKS_CLUSTER_NAME = module.aks.cluster_name,
       K8S_NAMESPACE    = var.k8s_namespace,
       PUBLIC_IP_ADDRESS : module.aks.public_ip_address,
-      MQTT_BROKER_ENDPOINT = "spacelift-mqtt.${var.k8s_namespace}.svc.cluster.local.",
     },
+  })
+}
+
+output "kubernetes_secrets" {
+  sensitive   = true
+  description = "Kubernetes secrets required for the Spacelift services. This output is just included as a convenience for use as part of the EKS getting started guide."
+  value = templatefile("${path.module}/kubernetes-secrets.tftpl", {
+    NAMESPACE                                      = var.k8s_namespace
+    SERVER_DOMAIN                                  = var.app_domain
+    MQTT_BROKER_DOMAIN                             = "spacelift-mqtt.${var.k8s_namespace}.svc.cluster.local"
+    ENCRYPTION_RSA_PRIVATE_KEY                     = var.encryption_rsa_private_key
+    STORAGE_ACCOUNT_URL                            = module.container_storage.storage_account_url
+    OBJECT_STORAGE_BUCKET_DELIVERIES               = module.container_storage.deliveries_container
+    OBJECT_STORAGE_BUCKET_LARGE_QUEUE_MESSAGES     = module.container_storage.large_queue_messages_container
+    OBJECT_STORAGE_BUCKET_MODULES                  = module.container_storage.modules_container
+    OBJECT_STORAGE_BUCKET_POLICY_INPUTS            = module.container_storage.policy_inputs_container
+    OBJECT_STORAGE_BUCKET_RUN_LOGS                 = module.container_storage.run_logs_container
+    OBJECT_STORAGE_BUCKET_STATES                   = module.container_storage.states_container
+    OBJECT_STORAGE_BUCKET_USER_UPLOADED_WORKSPACES = module.container_storage.user_uploaded_workspaces_container
+    OBJECT_STORAGE_BUCKET_WORKSPACE                = module.container_storage.workspaces_container
+    OBJECT_STORAGE_BUCKET_METADATA                 = module.container_storage.metadata_container
+    OBJECT_STORAGE_BUCKET_UPLOADS                  = module.container_storage.uploads_container
+    DATABASE_URL                                   = "postgres://postgres:${urlencode(module.postgres.postgres_password)}@${module.postgres.postgres_address}/postgres?sslmode=verify-full"
+    DATABASE_READ_ONLY_URL                         = "postgres://postgres:${urlencode(module.postgres.postgres_password)}@${module.postgres.postgres_address}/postgres?sslmode=verify-full"
+    LICENSE_TOKEN                                  = var.license_token != null ? var.license_token : ""
+    SPACELIFT_PUBLIC_API                           = var.spacelift_public_api != null ? var.spacelift_public_api : ""
+    WEBHOOKS_ENDPOINT                              = "https://${var.app_domain}/webhooks"
+    ADMIN_USERNAME                                 = var.admin_username != null ? var.admin_username : ""
+    ADMIN_PASSWORD                                 = var.admin_password != null ? var.admin_password : ""
+    LAUNCHER_IMAGE                                 = "${module.container_registry.public_registry_url}/spacelift-launcher"
+    LAUNCHER_IMAGE_TAG                             = var.spacelift_version != null ? var.spacelift_version : ""
+  })
+}
+
+output "helm_values" {
+  description = "Generates a Helm values.yaml file that can be used when deploying Spacelift. This output is just included as a convenience for use as part of the EKS getting started guide."
+  value = templatefile("${path.module}/helm-values.tftpl", {
+    SERVER_DOMAIN     = var.app_domain
+    BACKEND_IMAGE     = "${module.container_registry.private_registry_url}/spacelift-backend"
+    SPACELIFT_VERSION = var.spacelift_version != null ? var.spacelift_version : ""
   })
 }

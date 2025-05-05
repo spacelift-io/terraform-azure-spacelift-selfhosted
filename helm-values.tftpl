@@ -1,0 +1,19 @@
+shared:
+  serverHostname: "${SERVER_DOMAIN}"
+  image: "${BACKEND_IMAGE}:${SPACELIFT_VERSION}"
+  secretRef: "spacelift-shared"
+
+server:
+  secretRef: "spacelift-server"
+
+drain:
+  secretRef: "spacelift-drain"
+
+ingress:
+  ingressClassName: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+
+ingressV6:
+  enabled: false
