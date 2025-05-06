@@ -1,5 +1,5 @@
 version: 2
-module_version: "0.0.4"
+module_version: "0.0.5"
 
 tests:
   - name: Test infrastructure creation
