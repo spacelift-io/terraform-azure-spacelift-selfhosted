@@ -20,7 +20,6 @@ module "spacelift" {
   app_domain          = "spacelift.mycompany.com"
   location            = "polandcentral"
   resource_group_name = "testgrouptocreate"
-  subscription_id     = "00000000-0000-0000-0000-000000000000"
 }
 ```
 

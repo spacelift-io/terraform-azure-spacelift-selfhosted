@@ -1,10 +1,7 @@
 version: 2
-module_version: "0.0.5"
+module_version: "0.0.6"
 
 tests:
   - name: Test infrastructure creation
     runner_image: public.ecr.aws/spacelift/runner-terraform:azure-latest
-    environment:
-      TF_VAR_location: westeurope
-      TF_VAR_resource_group_name: self-hosted-v3-tf-testing
-      TF_VAR_app_domain: spacelift.example.com
+    project_root: "examples/simple"

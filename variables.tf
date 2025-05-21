@@ -13,11 +13,6 @@ variable "app_domain" {
   description = "The domain under which the Spacelift instance will be hosted"
 }
 
-variable "subscription_id" {
-  type        = string
-  description = "The subscription ID that will be used to create a resource group"
-}
-
 variable "k8s_namespace" {
   type        = string
   default     = "spacelift"
