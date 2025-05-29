@@ -88,3 +88,9 @@ variable "admin_password" {
   default     = ""
   sensitive   = true
 }
+
+variable "number_of_images_to_retain" {
+  type = number
+  default = 5
+  description = "Number of Docker images to retain in Container Registry repositories. Default is 5. If set to 0, no images will be cleaned up."
+}

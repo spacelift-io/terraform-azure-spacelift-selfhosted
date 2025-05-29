@@ -21,8 +21,9 @@ resource "azurerm_role_assignment" "kube_pull_acr" {
 }
 
 resource "azurerm_container_registry_task" "acr_purge_task_backend_image" {
-  name                    = "acr-purge-backend-image"
-  container_registry_id   = azurerm_container_registry.self_hosted.id
+  count                 = var.number_of_images_to_retain > 0 ? 1 : 0
+  name                  = "acr-purge-backend-image"
+  container_registry_id = azurerm_container_registry.self_hosted.id
   platform {
     os = "Linux"
   }
@@ -31,7 +32,7 @@ resource "azurerm_container_registry_task" "acr_purge_task_backend_image" {
     task_content = base64encode(<<-EOF
 version: v1.1.0
 steps:
-  - cmd: acr purge --filter 'spacelift-backend:.*' --ago 1d --keep 3
+  - cmd: acr purge --filter 'spacelift-backend:.*' --ago 1d --keep ${var.number_of_images_to_retain}
 EOF
     )
     context_path = "/dev/null"
@@ -48,8 +49,9 @@ EOF
 }
 
 resource "azurerm_container_registry_task" "acr_purge_task_launcher_image" {
-  name                    = "acr-purge-launcher-image"
-  container_registry_id   = azurerm_container_registry.self_hosted_public.id
+  count                 = var.number_of_images_to_retain > 0 ? 1 : 0
+  name                  = "acr-purge-launcher-image"
+  container_registry_id = azurerm_container_registry.self_hosted_public.id
   platform {
     os = "Linux"
   }
@@ -58,7 +60,7 @@ resource "azurerm_container_registry_task" "acr_purge_task_launcher_image" {
     task_content = base64encode(<<-EOF
 version: v1.1.0
 steps:
-  - cmd: acr purge --filter 'spacelift-launcher:.*' --ago 1d --keep 3
+  - cmd: acr purge --filter 'spacelift-launcher:.*' --ago 1d --keep ${var.number_of_images_to_retain}
 EOF
     )
     context_path = "/dev/null"

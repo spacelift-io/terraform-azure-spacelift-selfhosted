@@ -10,10 +10,11 @@ resource "azurerm_resource_group" "rg" {
 }
 
 module "container_registry" {
-  source            = "./modules/container_registry"
-  seed              = random_string.seed.result
-  resource_group    = azurerm_resource_group.rg
-  node_principal_id = module.aks.node_principal_id
+  source                     = "./modules/container_registry"
+  seed                       = random_string.seed.result
+  resource_group             = azurerm_resource_group.rg
+  node_principal_id          = module.aks.node_principal_id
+  number_of_images_to_retain = var.number_of_images_to_retain
 }
 
 
