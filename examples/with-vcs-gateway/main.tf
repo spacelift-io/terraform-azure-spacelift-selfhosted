@@ -11,10 +11,6 @@ terraform {
   }
 }
 
-variable "subscription_id" {
-  type = string
-}
-
 provider "azurerm" {
   features {}
   subscription_id = var.subscription_id
@@ -26,12 +22,13 @@ resource "random_string" "seed" {
   upper   = false
 }
 
-
 module "spacelift" {
   source = "../.."
 
-  app_domain          = "spacelift.example.com"
-  location            = "westeurope"
-  resource_group_name = "self-hosted-v3-tf-testing-${random_string.seed.result}"
-  postgres_version    = "17"
+  app_domain          = var.server_domain
+  location            = var.location
+  resource_group_name = "spacelift-vcs-gateway-${random_string.seed.result}"
+  postgres_version    = var.postgres_version
+
+  vcs_gateway_domain = var.vcs_gateway_domain
 }

@@ -29,3 +29,8 @@ variable "resource_group" {
   })
   description = "Azure resource group that will be used for the registries."
 }
+
+variable "postgres_version" {
+  type        = string
+  description = "PostgreSQL version for the flexible server."
+}

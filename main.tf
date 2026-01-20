@@ -55,6 +55,7 @@ module "postgres" {
   seed                     = random_string.seed.result
   virtual_network          = module.network.virtual_network
   flexible_server_sku_name = var.db_sku_name
+  postgres_version         = var.postgres_version
 }
 
 data "azurerm_client_config" "current" {}
