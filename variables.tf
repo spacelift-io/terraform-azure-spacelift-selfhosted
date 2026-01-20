@@ -25,6 +25,11 @@ variable "db_sku_name" {
   description = "The SKU name of the postgres flexible server"
 }
 
+variable "postgres_version" {
+  type        = string
+  description = "PostgreSQL major version for the flexible server. Example values include '15', '16', '17'."
+}
+
 variable "k8s_default_node_pool" {
   type = object({
     name                        = optional(string, "default")
@@ -87,4 +92,10 @@ variable "admin_password" {
   description = "The password for the Spacelift admin account. Only required for generating the kubernetes_secrets output. It can be ignored if you are not using that output."
   default     = ""
   sensitive   = true
+}
+
+variable "vcs_gateway_domain" {
+  type        = string
+  description = "Domain for the VCS Gateway endpoint (e.g., vcs-gateway.spacelift.mycompany.com). Leave empty to disable VCS Gateway."
+  default     = ""
 }

@@ -69,7 +69,7 @@ resource "azurerm_postgresql_flexible_server" "postgres" {
   private_dns_zone_id           = azurerm_private_dns_zone.spacelift-postgres.id
   sku_name                      = var.flexible_server_sku_name
   storage_mb                    = 32768
-  version                       = "14"
+  version                       = var.postgres_version
   public_network_access_enabled = false
 
   delegated_subnet_id    = azurerm_subnet.postgres.id
