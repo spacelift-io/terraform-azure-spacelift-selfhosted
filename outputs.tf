@@ -162,6 +162,15 @@ output "kubernetes_secrets" {
     LAUNCHER_IMAGE                                 = "${module.container_registry.public_registry_url}/spacelift-launcher"
     LAUNCHER_IMAGE_TAG                             = var.spacelift_version != null ? var.spacelift_version : ""
     VCS_GATEWAY_ENDPOINT                           = var.vcs_gateway_domain != null && var.vcs_gateway_domain != "" ? "${var.vcs_gateway_domain}:443" : ""
+
+    DRAIN_CONCURRENCY_ASYNC_JOBS      = var.drain_concurrency_async_jobs
+    DRAIN_CONCURRENCY_ASYNC_JOBS_FIFO = var.drain_concurrency_async_jobs_fifo
+    DRAIN_CONCURRENCY_CRONJOBS        = var.drain_concurrency_cronjobs
+    DRAIN_CONCURRENCY_DLQ             = var.drain_concurrency_dlq
+    DRAIN_CONCURRENCY_DLQ_FIFO        = var.drain_concurrency_dlq_fifo
+    DRAIN_CONCURRENCY_EVENTS          = var.drain_concurrency_events
+    DRAIN_CONCURRENCY_IOT             = var.drain_concurrency_iot
+    DRAIN_CONCURRENCY_WEBHOOKS        = var.drain_concurrency_webhooks
   })
 }
 
