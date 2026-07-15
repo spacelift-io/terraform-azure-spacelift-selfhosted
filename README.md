@@ -1,6 +1,17 @@
 # ☁️ Terraform module for Spacelift on Azure
 
 > [!IMPORTANT]
+> ## Upgrading to v3.0.0 - standalone scheduler removed
+>
+> The cron scheduler runs inside the drain, and the `spacelift-self-hosted` Helm
+> chart no longer deploys the scheduler Deployment. **Requires Self-Hosted v6.4.0
+> or newer**, the first release whose drain always runs the cron scheduler.
+> Nothing has to be configured for it - the generated `spacelift-drain` secret
+> carries no scheduler key at all.
+>
+> Removed variable: `drain_scheduler_enabled`.
+
+> [!IMPORTANT]
 > ## 🔄 Upgrading to v2.0.0 - Breaking changes
 >
 > Click below to see the full upgrade guide with breaking changes.

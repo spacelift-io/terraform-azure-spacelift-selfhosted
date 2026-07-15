@@ -81,12 +81,6 @@ variable "spacelift_version" {
   default     = ""
 }
 
-variable "drain_scheduler_enabled" {
-  type        = bool
-  description = "When true, the drain also runs the cron scheduler. Leave false to keep using the standalone scheduler deployment."
-  default     = false
-}
-
 variable "drain_concurrency_async_jobs" {
   type        = number
   description = "Number of concurrent receivers for the async-jobs queue per drain pod."
