@@ -23,6 +23,7 @@ locals {
     "spacelift-modules",
     "spacelift-policy-inputs",
     "spacelift-run-logs",
+    "spacelift-run-observability",
     "spacelift-states",
     "spacelift-uploads",
     "spacelift-user-uploaded-workspaces",
@@ -110,6 +111,7 @@ resource "azurerm_storage_management_policy" "large_queue_messages_policy" {
       blob_types = ["blockBlob"]
       prefix_match = [
         "spacelift-run-logs",
+        "spacelift-run-observability",
       ]
     }
 
