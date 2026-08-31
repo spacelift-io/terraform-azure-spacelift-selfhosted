@@ -18,6 +18,10 @@ output "run_logs_container" {
   value = azurerm_storage_container.spacelift-container["spacelift-run-logs"].name
 }
 
+output "run_observability_container" {
+  value = azurerm_storage_container.spacelift-container["spacelift-run-observability"].name
+}
+
 output "states_container" {
   value = azurerm_storage_container.spacelift-container["spacelift-states"].name
 }
