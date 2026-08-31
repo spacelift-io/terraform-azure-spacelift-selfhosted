@@ -1,44 +1,13 @@
 # ☁️ Terraform module for Spacelift on Azure
 
 > [!IMPORTANT]
-> ## 🔄 Upgrading to v2.0.0 - Breaking changes
+> ## Upgrading to v3.0.0 - standalone scheduler removed
 >
-> Click below to see the full upgrade guide with breaking changes.
-
-<details>
-<summary><h3>📋 Full v2.0.0 Upgrade Guide</h3></summary>
-
-### Breaking Changes
-
-#### Mandatory Version Parameter
-
-The following parameter is now **required** and has no default value:
-
-- **`postgres_version`** - The PostgreSQL version for the flexible server (previously hardcoded to `"14"`)
-
-**Why this change?** Hardcoded defaults prevent us from ever updating them without causing unexpected infrastructure changes for existing users. Explicit version specification is simpler and gives you full control.
-
-**Action Required:** You must explicitly set this value in your module configuration:
-
-### Example Migration
-
-```diff
-module "spacelift" {
--  source = "github.com/spacelift-io/terraform-azure-spacelift-selfhosted?ref=v1.0.0"
-+  source = "github.com/spacelift-io/terraform-azure-spacelift-selfhosted?ref=v2.0.0"
-
-  app_domain          = "spacelift.mycompany.com"
-  location            = "polandcentral"
-  resource_group_name = "spacelift-rg"
-
-+  postgres_version = "14"  # Now required
-}
-```
-
-> [!WARNING]
-> **Major PostgreSQL version upgrades** are offline operations that cause downtime (typically under 15 minutes, depending on database size). See the [Azure documentation](https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-major-version-upgrade) for full details.
-
-</details>
+> The cron scheduler runs inside the drain, and the `spacelift-self-hosted` Helm
+> chart no longer deploys the scheduler Deployment. **Requires Self-Hosted v6.4.0
+> or newer**, the first release whose drain always runs the cron scheduler.
+> Nothing has to be configured for it - the generated `spacelift-drain` secret
+> carries no scheduler key at all.
 
 ---
 
