@@ -4,7 +4,9 @@ resource "azurerm_subnet" "postgres" {
   virtual_network_name = var.virtual_network.name
   address_prefixes     = ["10.30.0.0/24"]
 
-  service_endpoints = ["Microsoft.Storage"]
+  service_endpoint {
+    service = "Microsoft.Storage"
+  }
 
   delegation {
     name = "fs"
@@ -52,10 +54,9 @@ resource "azurerm_subnet_network_security_group_association" "spacelift-postgres
 
 
 resource "azurerm_private_dns_zone_virtual_network_link" "default" {
-  name                  = "spacelift${var.seed}-pdzvnetlink.com"
-  private_dns_zone_name = azurerm_private_dns_zone.spacelift-postgres.name
-  virtual_network_id    = var.virtual_network.id
-  resource_group_name   = var.resource_group.name
+  name                = "spacelift${var.seed}-pdzvnetlink.com"
+  private_dns_zone_id = azurerm_private_dns_zone.spacelift-postgres.id
+  virtual_network_id  = var.virtual_network.id
 }
 
 resource "random_password" "db-root-password" {

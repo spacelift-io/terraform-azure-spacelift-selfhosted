@@ -30,6 +30,10 @@ resource "azurerm_kubernetes_cluster" "self-hosted" {
     type = "SystemAssigned"
   }
 
+  node_provisioning_profile {
+    mode = "Manual"
+  }
+
   lifecycle {
     # Just to filter noise out of plans
     # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#auto_scaling_enabled-1
