@@ -4,6 +4,10 @@ resource "azurerm_kubernetes_cluster" "self-hosted" {
   resource_group_name = var.resource_group.name
   dns_prefix          = "spacelift${var.seed}"
 
+  # azurerm 5.0 flipped the default to true. Keep the 4.x behavior, since
+  # the OIDC issuer can't be disabled on a cluster once it's enabled.
+  oidc_issuer_enabled = false
+
   default_node_pool {
     name                        = var.default_node_pool.name
     temporary_name_for_rotation = var.default_node_pool.temporary_name_for_rotation

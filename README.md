@@ -1,6 +1,22 @@
 # ☁️ Terraform module for Spacelift on Azure
 
 > [!IMPORTANT]
+> ## Upgrading to v4.0.0 - azurerm provider 5.x
+>
+> The module now requires the `azurerm` provider `~>5.0`. **Bump the `azurerm`
+> version constraint in your root module** and run `tofu init -upgrade`. Other
+> `azurerm` resources in your configuration may need changes too - see the
+> [5.0 upgrade guide](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/5.0-upgrade-guide).
+>
+> Expect one in-place change in the plan: `allow_nested_items_to_be_public` on the
+> storage account goes to `false`, the new provider default. All containers are
+> private already, so nothing changes for Spacelift.
+>
+> azurerm 5.x no longer registers Azure Resource Providers by default. On a fresh
+> subscription, set `resource_provider_registrations = "legacy"` in your
+> `provider "azurerm"` block, or register the providers yourself.
+
+> [!IMPORTANT]
 > ## Upgrading to v3.0.0 - standalone scheduler removed
 >
 > The cron scheduler runs inside the drain, and the `spacelift-self-hosted` Helm
@@ -26,7 +42,7 @@ information on how to configure the state storage.
 
 ```hcl
 module "spacelift" {
-  source = "github.com/spacelift-io/terraform-azure-spacelift-selfhosted?ref=v2.0.0"
+  source = "github.com/spacelift-io/terraform-azure-spacelift-selfhosted?ref=v4.0.0"
 
   app_domain          = "spacelift.mycompany.com"
   location            = "polandcentral"
