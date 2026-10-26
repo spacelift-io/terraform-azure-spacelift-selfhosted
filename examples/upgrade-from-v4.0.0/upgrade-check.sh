@@ -1,3 +1,6 @@
+TF=$(command -v tofu || command -v terraform || true)
+[ -n "$TF" ] && [ -x "$TF" ] || { echo "FAIL: neither tofu nor terraform found on PATH ($PATH)"; exit 1; }
+echo "using $TF ($("$TF" version | head -n 1))"
 #!/bin/sh
 # Temporary ER-10 check, runs as an after_apply hook of the "Upgrade from v4.0.0" test case.
 # The example was just applied with the v4.0.0 release. This swaps the module source to the
@@ -5,23 +8,37 @@
 # the v4.0.0 source, so the destroy phase runs on the code that created the resources.
 # Prints only resource addresses and plan summaries, never attribute values.
 set -eu
-TF=$(command -v tofu || command -v terraform)
+TF=$(command -v tofu || command -v terraform || true)
+[ -n "$TF" ] && [ -x "$TF" ] || { echo "FAIL: neither tofu nor terraform found on PATH ($PATH)"; exit 1; }
+echo "using $TF ($("$TF" version | head -n 1))"
 OLD='source = "github.com/spacelift-io/terraform-azure-spacelift-selfhosted?ref=v4.0.0"'
 NEW='source = "../.."'
 PLAN=$(mktemp)
+PLANFILE=$(mktemp)
+PENDING=$(mktemp)
+trap 'rm -f "$PLAN" "$PLANFILE" "$PENDING"' EXIT
 fail=0
 
-plan() { # <label>; sets rc
+plan() { # <label>; sets rc, writes the plan to $PLANFILE and the text to $PLAN
   set +e
-  "$TF" plan -input=false -lock=false -no-color -detailed-exitcode >"$PLAN" 2>&1
+  "$TF" plan -input=false -lock=false -no-color -detailed-exitcode -out="$PLANFILE" >"$PLAN" 2>&1
   rc=$?
   set -e
   echo "== $1: plan exit code $rc"
   grep -E '^  # |^Plan:|^No changes|^Error|^│ Error' "$PLAN" || true
 }
 
-no_changes() { # rc 0, or rc 2 with nothing to add, change or destroy (moves only)
-  [ "$rc" = "0" ] || { [ "$rc" = "2" ] && grep -q 'Plan: 0 to add, 0 to change, 0 to destroy' "$PLAN"; }
+# Passes when nothing but moves is pending: a moves-only plan exits 2, so the exit code alone is not enough.
+# Reads only actions and addresses from the JSON plan, never values (the plan holds secrets).
+no_changes() {
+  [ "$rc" = "0" ] && return 0
+  [ "$rc" = "2" ] || return 1
+  "$TF" show -json "$PLANFILE" | jq -r '
+    (.resource_changes // [])[] | select(.change.actions != ["no-op"]) | "  pending: \(.change.actions | join(",")) \(.address)"' >"$PENDING"
+  "$TF" show -json "$PLANFILE" | jq -r '
+    (.output_changes // {}) | to_entries[] | select(.value.actions != ["no-op"]) | "  pending output: \(.value.actions | join(",")) \(.key)"' >>"$PENDING"
+  cat "$PENDING"
+  [ ! -s "$PENDING" ]
 }
 
 cp main.tf main.tf.orig
@@ -36,8 +53,7 @@ grep -F 'source =' main.tf
 plan "upgrade to the branch"
 if no_changes; then
   echo "ok: the branch plans no changes on a v4.0.0 install"
-  moved=$(grep -c 'has moved to' "$PLAN" || true)
-  echo "moved resources: $moved"
+  echo "moved resources: $("$TF" show -json "$PLANFILE" | jq '[(.resource_changes // [])[] | select(.previous_address != null)] | length')"
 else
   echo "FAIL: the branch plans changes on a v4.0.0 install"
   fail=1

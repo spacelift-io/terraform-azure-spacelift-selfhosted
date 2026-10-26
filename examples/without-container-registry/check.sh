@@ -1,8 +1,13 @@
+TF=$(command -v tofu || command -v terraform || true)
+[ -n "$TF" ] && [ -x "$TF" ] || { echo "FAIL: neither tofu nor terraform found on PATH ($PATH)"; exit 1; }
+echo "using $TF ($("$TF" version | head -n 1))"
 #!/bin/sh
 # Temporary ER-10 check, runs as an after_apply hook of the "No container registry" test case.
 # Never prints output values: kubernetes_secrets holds the database password. Only key names are printed.
 set -eu
-TF=$(command -v tofu || command -v terraform)
+TF=$(command -v tofu || command -v terraform || true)
+[ -n "$TF" ] && [ -x "$TF" ] || { echo "FAIL: neither tofu nor terraform found on PATH ($PATH)"; exit 1; }
+echo "using $TF ($("$TF" version | head -n 1))"
 fail=0
 
 absent() { # <output> <regex>: no line of the output matches the regex
@@ -24,8 +29,8 @@ present() { # <output> <fixed string>: sanity check that the output rendered at 
   fi
 }
 
-is_null() { # <output>
-  v=$("$TF" output -json "$1")
+is_null() { # <output>: null root outputs are not stored in the state, so a missing output counts as null
+  v=$("$TF" output -json | jq -c --arg o "$1" '.[$o].value')
   if [ "$v" = "null" ]; then echo "ok: $1 is null"; else echo "FAIL: $1 is $v"; fail=1; fi
 }
 
