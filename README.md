@@ -42,7 +42,7 @@ information on how to configure the state storage.
 
 ```hcl
 module "spacelift" {
-  source = "github.com/spacelift-io/terraform-azure-spacelift-selfhosted?ref=v4.0.0"
+  source = "github.com/spacelift-io/terraform-azure-spacelift-selfhosted?ref=v4.1.0"
 
   app_domain          = "spacelift.mycompany.com"
   location            = "polandcentral"
@@ -56,14 +56,44 @@ The module creates:
 - Network resources
     - a virtual network for the infrastructure
     - a subnetwork for the AKS cluster
-- Container repositories
-    - Azure Container registries for storing Docker images
+- Container registries (optional, see [Without a container registry](#without-a-container-registry))
+    - a private Azure Container Registry for the backend image, which the AKS nodes can pull from
+    - a public Azure Container Registry with anonymous pull for the launcher image
 - Database resources
     - a Postgres Flexible Server instance
 - Storage resources
     - various containers for storing run metadata, run logs, workspaces, stack states etc.
 - AKS cluster
     - a Kubernetes auto-scaled cluster to install Spacelift on
+
+### Without a container registry
+
+By default the module creates two Azure Container Registries, and you push the Spacelift images to them. To pull the
+images from an external registry instead, such as `registry.spacelift.io`, set `create_container_registry` to `false`:
+
+```hcl
+module "spacelift" {
+  source = "github.com/spacelift-io/terraform-azure-spacelift-selfhosted?ref=v4.1.0"
+
+  app_domain                = "spacelift.mycompany.com"
+  location                  = "polandcentral"
+  resource_group_name       = "spacelift-rg"
+  postgres_version          = "17"
+  create_container_registry = false
+}
+```
+
+With the flag off:
+
+- the module creates neither registry, nor the `AcrPull` role assignment for the AKS nodes;
+- `public_container_registry_name` and `private_container_registry_name` are `null`;
+- the `shell`, `kubernetes_secrets` and `helm_values` outputs have no image or registry lines. Set the backend and
+  launcher images and the image pull secret in your Helm values instead;
+- external or Docker-based workers can no longer pull the launcher image anonymously from the public registry and
+  need credentials for the registry you use.
+
+> ⚠️ Switching `create_container_registry` to `false` on an existing installation destroys both registries together
+> with the images in them.
 
 ### With VCS Gateway
 

@@ -10,12 +10,28 @@ resource "azurerm_resource_group" "rg" {
 }
 
 module "container_registry" {
+  count = var.create_container_registry ? 1 : 0
+
   source            = "./modules/container_registry"
   seed              = random_string.seed.result
   resource_group    = azurerm_resource_group.rg
   node_principal_id = module.aks.node_principal_id
 }
 
+# Installs created before create_container_registry existed have the registries
+# at module.container_registry. Without this block they would be destroyed and
+# created again under module.container_registry[0].
+moved {
+  from = module.container_registry
+  to   = module.container_registry[0]
+}
+
+locals {
+  # Null when create_container_registry is false: the outputs then leave the
+  # image lines out, and the images are set in the Helm values instead.
+  backend_image  = var.create_container_registry ? "${module.container_registry[0].private_registry_url}/spacelift-backend" : null
+  launcher_image = var.create_container_registry ? "${module.container_registry[0].public_registry_url}/spacelift-launcher" : null
+}
 
 module "container_storage" {
   source               = "./modules/container_storage"

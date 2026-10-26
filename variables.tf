@@ -147,3 +147,17 @@ variable "vcs_gateway_domain" {
   description = "Domain for the VCS Gateway endpoint (e.g., vcs-gateway.spacelift.mycompany.com). Leave empty to disable VCS Gateway."
   default     = ""
 }
+
+variable "create_container_registry" {
+  type        = bool
+  default     = true
+  description = <<-EOT
+  Whether to create the Azure Container Registries for the Spacelift images: a private one for the backend image
+  (with AcrPull for the AKS nodes) and a public one with anonymous pull for the launcher image.
+  Set it to false to pull the images from an external registry, such as registry.spacelift.io. The image and registry
+  name lines are then left out of the shell, kubernetes_secrets and helm_values outputs, and you set the images and
+  the image pull secret in your Helm values. External or Docker-based workers can no longer pull the launcher image
+  anonymously either and need credentials for the registry you use.
+  Switching it to false on an existing installation destroys both registries together with the images in them.
+  EOT
+}
