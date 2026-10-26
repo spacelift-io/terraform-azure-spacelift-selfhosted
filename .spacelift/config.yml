@@ -5,3 +5,16 @@ tests:
   - name: Test infrastructure creation
     runner_image: public.ecr.aws/spacelift/runner-terraform:azure-latest
     project_root: "examples/simple"
+
+  # Temporary ER-10 test cases: dropped before the PR is marked ready.
+  - name: No container registry
+    runner_image: public.ecr.aws/spacelift/runner-terraform:azure-latest
+    project_root: "examples/without-container-registry"
+    after_apply:
+      - sh ./check.sh
+
+  - name: Upgrade from v4.0.0
+    runner_image: public.ecr.aws/spacelift/runner-terraform:azure-latest
+    project_root: "examples/upgrade-from-v4.0.0"
+    after_apply:
+      - sh ./upgrade-check.sh
