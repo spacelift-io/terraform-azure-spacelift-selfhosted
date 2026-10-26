@@ -102,7 +102,7 @@ output "public_container_registry_name" {
 }
 
 output "private_container_registry_name" {
-  value       = module.container_registry.public_registry_name
+  value       = module.container_registry.private_registry_name
   description = "Name of the private container registry"
 }
 
