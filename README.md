@@ -42,7 +42,8 @@ information on how to configure the state storage.
 
 ```hcl
 module "spacelift" {
-  source = "github.com/spacelift-io/terraform-azure-spacelift-selfhosted?ref=v4.0.0"
+  source  = "spacelift-io/spacelift-selfhosted/azure"
+  version = "~> 4.0"
 
   app_domain          = "spacelift.mycompany.com"
   location            = "polandcentral"
@@ -73,7 +74,7 @@ See a full example in the [examples/with-vcs-gateway](examples/with-vcs-gateway)
 
 ## Module registries
 
-The module is also available [on the OpenTofu registry](https://search.opentofu.org/module/spacelift-io/spacelift-selfhosted/azure/latest) where you can browse the input and output variables.
+The module is published under the same address on both the [Terraform registry](https://registry.terraform.io/modules/spacelift-io/spacelift-selfhosted/azure/latest) and the [OpenTofu registry](https://search.opentofu.org/module/spacelift-io/spacelift-selfhosted/azure/latest), so the snippet above works with either tool. Both registries list the module's inputs and outputs.
 
 ## 🚀 Release
 
