@@ -156,8 +156,8 @@ variable "create_container_registry" {
   (with AcrPull for the AKS nodes) and a public one with anonymous pull for the launcher image.
   Set it to false to pull the images from an external registry, such as oci.spacelift.io. The image and registry
   name lines are then left out of the shell, kubernetes_secrets and helm_values outputs, and you set the images and
-  the image pull secret in your Helm values. External or Docker-based workers can no longer pull the launcher image
-  anonymously either and need credentials for the registry you use.
+  the image pull secret in your Helm values. Kubernetes worker pools can no longer pull the launcher image anonymously
+  either and need a pull secret for the registry you use.
   On an existing installation, setting it to false removes the registries from the module, see the README for how to
   keep or delete them.
   EOT

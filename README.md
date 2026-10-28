@@ -87,10 +87,10 @@ With the flag off:
 
 - the module creates neither registry, nor the `AcrPull` role assignment for the AKS nodes;
 - `public_container_registry_name` and `private_container_registry_name` are `null`;
-- the `shell`, `kubernetes_secrets` and `helm_values` outputs have no image or registry lines. Set the backend and
-  launcher images and the image pull secret in your Helm values instead;
-- external or Docker-based workers can no longer pull the launcher image anonymously from the public registry and
-  need credentials for the registry you use.
+- the `shell`, `kubernetes_secrets` and `helm_values` outputs have no image or registry lines. Set the backend image,
+  the launcher image and the pull secret (`shared.imagePullSecrets`) in your Helm values yourself;
+- Kubernetes worker pools, in this cluster or elsewhere, can no longer pull the launcher image anonymously from the
+  public registry. Give them a pull secret for the registry you use (`spec.pod.imagePullSecrets` on the `WorkerPool`).
 
 #### Switch an existing installation
 
