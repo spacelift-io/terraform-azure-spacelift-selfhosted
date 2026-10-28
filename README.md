@@ -69,7 +69,7 @@ The module creates:
 ### Without a container registry
 
 By default the module creates two Azure Container Registries, and you push the Spacelift images to them. To pull the
-images from an external registry instead, such as `registry.spacelift.io`, set `create_container_registry` to `false`:
+images from an external registry instead, such as `oci.spacelift.io`, set `create_container_registry` to `false`:
 
 ```hcl
 module "spacelift" {
