@@ -92,8 +92,26 @@ With the flag off:
 - external or Docker-based workers can no longer pull the launcher image anonymously from the public registry and
   need credentials for the registry you use.
 
-> ⚠️ Switching `create_container_registry` to `false` on an existing installation destroys both registries together
-> with the images in them.
+#### Switch an existing installation
+
+On an existing installation, turning the flag off removes the registries from the module. Follow
+[Switch an existing installation to another registry](https://github.com/spacelift-io/terraform-aws-spacelift-selfhosted#switch-an-existing-installation-to-another-registry)
+in the AWS base module README, it explains how to keep the registries or delete them. Things that are different on
+Azure:
+
+- point the services at the images in the new registry in your Helm values;
+- to keep the registries, remove them from the state, then set the flag to `false` and apply:
+
+  ```shell
+  tofu state rm 'module.spacelift.module.container_registry[0]'
+  ```
+
+  This also keeps the `AcrPull` role assignment for the AKS nodes. The registries stay in the resource group of the
+  module, delete them yourself once you don't need them;
+- to delete the registries, just set the flag to `false` and apply. Azure has no `force_delete` step like ECR.
+
+> ⚠️ If you set `create_container_registry` to `false` on an existing installation without removing the registries
+> from the state first, the apply deletes both registries together with the images in them.
 
 ### With VCS Gateway
 
