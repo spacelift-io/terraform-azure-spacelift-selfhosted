@@ -68,6 +68,11 @@ The module creates:
 
 ### Without a container registry
 
+> [!NOTE]
+> We recommend pulling the images from `oci.spacelift.io`. Starting with Self-Hosted v8.0.0, releases no longer
+> include the image archives, so the images are only available from `oci.spacelift.io`. To keep them in your own
+> registry, mirror them from there.
+
 By default the module creates two Azure Container Registries, and you push the Spacelift images to them. To pull the
 images from an external registry instead, such as `oci.spacelift.io`, set `create_container_registry` to `false`:
 
