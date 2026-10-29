@@ -56,7 +56,8 @@ When a request arrives, nginx examines the `Host` header and routes it according
 
 ```hcl
 module "spacelift" {
-  source = "github.com/spacelift-io/terraform-azure-spacelift-selfhosted"
+  source  = "spacelift-io/spacelift-selfhosted/azure"
+  version = "~> 4.0"
   # Configurations omitted for brevity
 
   vcs_gateway_domain = "vcs-gateway.example.com"
