@@ -97,13 +97,13 @@ output "deliveries_bucket" {
 
 ### Container registry ###
 output "public_container_registry_name" {
-  value       = module.container_registry.public_registry_name
-  description = "Name of the public container registry"
+  value       = one(module.container_registry[*].public_registry_name)
+  description = "Name of the public container registry. Null when create_container_registry is false."
 }
 
 output "private_container_registry_name" {
-  value       = module.container_registry.public_registry_name
-  description = "Name of the private container registry"
+  value       = one(module.container_registry[*].private_registry_name)
+  description = "Name of the private container registry. Null when create_container_registry is false."
 }
 
 ### AKS ###
@@ -120,21 +120,23 @@ output "aks_public_v4_address" {
 output "shell" {
   sensitive = true
   value = templatefile("${path.module}/env.tftpl", {
-    env : {
+    # Null values are left out, so without the container registries there are
+    # no registry or image lines.
+    env : { for key, value in {
       SPACELIFT_VERSION : var.spacelift_version != null ? var.spacelift_version : "",
       AZURE_RESOURCE_GROUP_NAME : var.resource_group_name,
 
       # Container registry
-      PRIVATE_CONTAINER_REGISTRY_NAME : module.container_registry.private_registry_name,
-      PUBLIC_CONTAINER_REGISTRY_NAME : module.container_registry.public_registry_name,
-      BACKEND_IMAGE : "${module.container_registry.private_registry_url}/spacelift-backend",
-      LAUNCHER_IMAGE : "${module.container_registry.public_registry_url}/spacelift-launcher",
+      PRIVATE_CONTAINER_REGISTRY_NAME : one(module.container_registry[*].private_registry_name),
+      PUBLIC_CONTAINER_REGISTRY_NAME : one(module.container_registry[*].public_registry_name),
+      BACKEND_IMAGE : local.backend_image,
+      LAUNCHER_IMAGE : local.launcher_image,
 
       #AKS
       AKS_CLUSTER_NAME = module.aks.cluster_name,
       K8S_NAMESPACE    = var.k8s_namespace,
       PUBLIC_IP_ADDRESS : module.aks.public_ip_address,
-    },
+    } : key => value if value != null },
   })
 }
 
@@ -165,7 +167,7 @@ output "kubernetes_secrets" {
     WEBHOOKS_ENDPOINT                              = "https://${var.app_domain}/webhooks"
     ADMIN_USERNAME                                 = var.admin_username != null ? var.admin_username : ""
     ADMIN_PASSWORD                                 = var.admin_password != null ? var.admin_password : ""
-    LAUNCHER_IMAGE                                 = "${module.container_registry.public_registry_url}/spacelift-launcher"
+    LAUNCHER_IMAGE                                 = local.launcher_image
     LAUNCHER_IMAGE_TAG                             = var.spacelift_version != null ? var.spacelift_version : ""
     VCS_GATEWAY_ENDPOINT                           = var.vcs_gateway_domain != null && var.vcs_gateway_domain != "" ? "${var.vcs_gateway_domain}:443" : ""
 
@@ -184,7 +186,7 @@ output "helm_values" {
   description = "Generates a Helm values.yaml file that can be used when deploying Spacelift. This output is just included as a convenience for use as part of the EKS getting started guide."
   value = templatefile("${path.module}/helm-values.tftpl", {
     SERVER_DOMAIN       = var.app_domain
-    BACKEND_IMAGE       = "${module.container_registry.private_registry_url}/spacelift-backend"
+    BACKEND_IMAGE       = local.backend_image
     SPACELIFT_VERSION   = var.spacelift_version != null ? var.spacelift_version : ""
     VCS_GATEWAY_ENABLED = var.vcs_gateway_domain != null && var.vcs_gateway_domain != ""
     VCS_GATEWAY_DOMAIN  = var.vcs_gateway_domain != null ? var.vcs_gateway_domain : ""
