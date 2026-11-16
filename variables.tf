@@ -155,10 +155,22 @@ variable "create_container_registry" {
   Whether to create the Azure Container Registries for the Spacelift images: a private one for the backend image
   (with AcrPull for the AKS nodes) and a public one with anonymous pull for the launcher image.
   Set it to false to pull the images from an external registry, such as oci.spacelift.io. The image and registry
-  name lines are then left out of the shell, kubernetes_secrets and helm_values outputs, and you set the images and
-  the image pull secret in your Helm values. Kubernetes worker pools can no longer pull the launcher image anonymously
+  name lines are then left out of the shell and kubernetes_secrets outputs, and the helm_values output pulls the
+  images from oci.spacelift.io with the pull secret named in image_pull_secret_name. Kubernetes worker pools can no longer pull the launcher image anonymously
   either and need a pull secret for the registry you use.
   On an existing installation, setting it to false removes the registries from the module, see the README for how to
   keep or delete them.
   EOT
+}
+
+variable "image_pull_secret_name" {
+  type        = string
+  description = "Name of the Kubernetes secret with your credentials for oci.spacelift.io. Only used when create_container_registry is false: the helm_values output then pulls the images from oci.spacelift.io with this secret. You create the secret yourself, in the namespace you install Spacelift to."
+  default     = "spacelift-registry"
+  nullable    = false
+
+  validation {
+    condition     = length(var.image_pull_secret_name) > 0
+    error_message = "image_pull_secret_name must not be empty."
+  }
 }

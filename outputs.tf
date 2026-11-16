@@ -185,10 +185,11 @@ output "kubernetes_secrets" {
 output "helm_values" {
   description = "Generates a Helm values.yaml file that can be used when deploying Spacelift. This output is just included as a convenience for use as part of the EKS getting started guide."
   value = templatefile("${path.module}/helm-values.tftpl", {
-    SERVER_DOMAIN       = var.app_domain
-    BACKEND_IMAGE       = local.backend_image
-    SPACELIFT_VERSION   = var.spacelift_version != null ? var.spacelift_version : ""
-    VCS_GATEWAY_ENABLED = var.vcs_gateway_domain != null && var.vcs_gateway_domain != ""
-    VCS_GATEWAY_DOMAIN  = var.vcs_gateway_domain != null ? var.vcs_gateway_domain : ""
+    SERVER_DOMAIN          = var.app_domain
+    BACKEND_IMAGE          = local.backend_image
+    SPACELIFT_VERSION      = var.spacelift_version != null ? var.spacelift_version : ""
+    IMAGE_PULL_SECRET_NAME = var.image_pull_secret_name
+    VCS_GATEWAY_ENABLED    = var.vcs_gateway_domain != null && var.vcs_gateway_domain != ""
+    VCS_GATEWAY_DOMAIN     = var.vcs_gateway_domain != null ? var.vcs_gateway_domain : ""
   })
 }

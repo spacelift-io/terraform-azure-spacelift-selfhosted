@@ -94,10 +94,25 @@ With the flag off:
 
 - the module creates neither registry, nor the `AcrPull` role assignment for the AKS nodes;
 - `public_container_registry_name` and `private_container_registry_name` are `null`;
-- the `shell`, `kubernetes_secrets` and `helm_values` outputs have no image or registry lines. Set the backend image,
-  the launcher image and the pull secret (`shared.imagePullSecrets`) in your Helm values yourself;
+- the `shell` and `kubernetes_secrets` outputs have no image or registry lines;
+- the `helm_values` output has no `shared.image`. Instead it pulls the backend and launcher images from
+  `oci.spacelift.io` (`shared.backendImage` and `shared.launcherImage`, tagged with `spacelift_version`) with the pull
+  secret named in `image_pull_secret_name` (`spacelift-registry` by default). These keys need Helm chart 7.1.0 or newer;
 - Kubernetes worker pools, in this cluster or elsewhere, can no longer pull the launcher image anonymously from the
   public registry. Give them a pull secret for the registry you use (`spec.pod.imagePullSecrets` on the `WorkerPool`).
+
+Create the pull secret in the namespace you install Spacelift to, with the registry credentials that come with your
+license:
+
+```shell
+kubectl create secret docker-registry spacelift-registry \
+  --namespace spacelift \
+  --docker-server=oci.spacelift.io \
+  --docker-username=<registry username> \
+  --docker-password=<registry password>
+```
+
+To pull from another registry, override `shared.backendImage` and `shared.launcherImage` in your Helm values.
 
 #### Switch an existing installation
 
