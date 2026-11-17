@@ -86,7 +86,9 @@ module "spacelift" {
   location                  = "polandcentral"
   resource_group_name       = "spacelift-rg"
   postgres_version          = "17"
-  create_container_registry = false
+
+  create_container_registry           = false
+  spacelift_registry_pull_secret_name = "spacelift-registry"
 }
 ```
 
@@ -95,14 +97,18 @@ With the flag off:
 - the module creates neither registry, nor the `AcrPull` role assignment for the AKS nodes;
 - `public_container_registry_name` and `private_container_registry_name` are `null`;
 - the `shell` and `kubernetes_secrets` outputs have no image or registry lines;
-- the `helm_values` output has no `shared.image`. Instead it pulls the backend and launcher images from
-  `oci.spacelift.io` (`shared.backendImage` and `shared.launcherImage`, tagged with `spacelift_version`) with the pull
-  secret named in `image_pull_secret_name` (`spacelift-registry` by default). These keys need Helm chart 7.1.0 or newer;
+- the `helm_values` output has no `shared.image` from the private registry;
 - Kubernetes worker pools, in this cluster or elsewhere, can no longer pull the launcher image anonymously from the
   public registry. Give them a pull secret for the registry you use (`spec.pod.imagePullSecrets` on the `WorkerPool`).
 
-Create the pull secret in the namespace you install Spacelift to, with the registry credentials that come with your
-license:
+Set `spacelift_registry_pull_secret_name` to pull the backend and launcher images from `oci.spacelift.io`. The
+`helm_values` output then references that pull secret (`shared.imagePullSecrets`) and enables the launcher image
+(`shared.launcherImage.enabled`). It sets no image tag, so the images follow the version of the Helm chart. These keys
+need Helm chart 7.1.0 or newer. The variable doesn't depend on `create_container_registry`, but you usually set both
+together.
+
+Create the pull secret yourself, in the namespace you install Spacelift to, with the registry credentials that come
+with your license. The module never sees the credentials, it only puts the secret name in `helm_values`:
 
 ```shell
 kubectl create secret docker-registry spacelift-registry \
@@ -112,7 +118,9 @@ kubectl create secret docker-registry spacelift-registry \
   --docker-password=<registry password>
 ```
 
-To pull from another registry, override `shared.backendImage` and `shared.launcherImage` in your Helm values.
+With `create_container_registry = false` and no `spacelift_registry_pull_secret_name`, `helm_values` sets no image. To
+pull from another registry, for example your own mirror, set `shared.backendImage` and `shared.launcherImage` in your
+Helm values.
 
 #### Switch an existing installation
 

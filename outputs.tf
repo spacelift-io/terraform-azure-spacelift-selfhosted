@@ -129,8 +129,8 @@ output "shell" {
       # Container registry
       PRIVATE_CONTAINER_REGISTRY_NAME : one(module.container_registry[*].private_registry_name),
       PUBLIC_CONTAINER_REGISTRY_NAME : one(module.container_registry[*].public_registry_name),
-      BACKEND_IMAGE : local.backend_image,
-      LAUNCHER_IMAGE : local.launcher_image,
+      BACKEND_IMAGE : local.acr_backend_image,
+      LAUNCHER_IMAGE : local.acr_launcher_image,
 
       #AKS
       AKS_CLUSTER_NAME = module.aks.cluster_name,
@@ -167,7 +167,7 @@ output "kubernetes_secrets" {
     WEBHOOKS_ENDPOINT                              = "https://${var.app_domain}/webhooks"
     ADMIN_USERNAME                                 = var.admin_username != null ? var.admin_username : ""
     ADMIN_PASSWORD                                 = var.admin_password != null ? var.admin_password : ""
-    LAUNCHER_IMAGE                                 = local.launcher_image
+    LAUNCHER_IMAGE                                 = local.acr_launcher_image
     LAUNCHER_IMAGE_TAG                             = var.spacelift_version != null ? var.spacelift_version : ""
     VCS_GATEWAY_ENDPOINT                           = var.vcs_gateway_domain != null && var.vcs_gateway_domain != "" ? "${var.vcs_gateway_domain}:443" : ""
 
@@ -185,11 +185,12 @@ output "kubernetes_secrets" {
 output "helm_values" {
   description = "Generates a Helm values.yaml file that can be used when deploying Spacelift. This output is just included as a convenience for use as part of the EKS getting started guide."
   value = templatefile("${path.module}/helm-values.tftpl", {
-    SERVER_DOMAIN          = var.app_domain
-    BACKEND_IMAGE          = local.backend_image
-    SPACELIFT_VERSION      = var.spacelift_version != null ? var.spacelift_version : ""
-    IMAGE_PULL_SECRET_NAME = var.image_pull_secret_name
-    VCS_GATEWAY_ENABLED    = var.vcs_gateway_domain != null && var.vcs_gateway_domain != ""
-    VCS_GATEWAY_DOMAIN     = var.vcs_gateway_domain != null ? var.vcs_gateway_domain : ""
+    SERVER_DOMAIN                       = var.app_domain
+    USE_SPACELIFT_REGISTRY              = local.use_spacelift_registry
+    SPACELIFT_REGISTRY_PULL_SECRET_NAME = var.spacelift_registry_pull_secret_name
+    BACKEND_IMAGE                       = local.acr_backend_image
+    SPACELIFT_VERSION                   = var.spacelift_version != null ? var.spacelift_version : ""
+    VCS_GATEWAY_ENABLED                 = var.vcs_gateway_domain != null && var.vcs_gateway_domain != ""
+    VCS_GATEWAY_DOMAIN                  = var.vcs_gateway_domain != null ? var.vcs_gateway_domain : ""
   })
 }

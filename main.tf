@@ -27,10 +27,11 @@ moved {
 }
 
 locals {
-  # Null when create_container_registry is false: the outputs then leave the
-  # image lines out, and the images are set in the Helm values instead.
-  backend_image  = var.create_container_registry ? "${module.container_registry[0].private_registry_url}/spacelift-backend" : null
-  launcher_image = var.create_container_registry ? "${module.container_registry[0].public_registry_url}/spacelift-launcher" : null
+  use_spacelift_registry = var.spacelift_registry_pull_secret_name != null
+
+  # Null when create_container_registry is false: the outputs then leave the image lines out.
+  acr_backend_image  = try("${module.container_registry[0].private_registry_url}/spacelift-backend", null)
+  acr_launcher_image = try("${module.container_registry[0].public_registry_url}/spacelift-launcher", null)
 }
 
 module "container_storage" {
