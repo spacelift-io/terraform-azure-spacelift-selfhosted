@@ -147,3 +147,29 @@ variable "vcs_gateway_domain" {
   description = "Domain for the VCS Gateway endpoint (e.g., vcs-gateway.spacelift.mycompany.com). Leave empty to disable VCS Gateway."
   default     = ""
 }
+
+variable "create_container_registry" {
+  type        = bool
+  default     = true
+  description = <<-EOT
+  Whether to create the Azure Container Registries for the Spacelift images: a private one for the backend image
+  (with AcrPull for the AKS nodes) and a public one with anonymous pull for the launcher image.
+  Set it to false to pull the images from an external registry, such as oci.spacelift.io. The image and registry
+  name lines are then left out of the shell, kubernetes_secrets and helm_values outputs. To pull the images from
+  oci.spacelift.io, set spacelift_registry_pull_secret_name as well. Kubernetes worker pools can no longer pull the
+  launcher image anonymously either and need a pull secret for the registry you use.
+  On an existing installation, setting it to false removes the registries from the module, see the README for how to
+  keep or delete them.
+  EOT
+}
+
+variable "spacelift_registry_pull_secret_name" {
+  type        = string
+  description = "Name of the Kubernetes secret holding your credentials for oci.spacelift.io. Set this to pull both the backend and launcher images from the Spacelift registry: the helm_values output then references this secret and enables the chart's launcher image, and no longer sets an image from the module's container registry. You create the secret yourself, in the namespace you install Spacelift to. Launcher pull credentials for worker pools are not covered by this secret, set them on the worker pool controller as well."
+  default     = null
+
+  validation {
+    condition     = var.spacelift_registry_pull_secret_name != ""
+    error_message = "spacelift_registry_pull_secret_name must not be empty."
+  }
+}
