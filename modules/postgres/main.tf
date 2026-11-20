@@ -94,3 +94,11 @@ resource "azurerm_postgresql_flexible_server_configuration" "max_connections" {
   server_id = azurerm_postgresql_flexible_server.postgres.id
   value     = "200"
 }
+
+# Spacelift creates these extensions during database migrations. Azure only allows
+# CREATE EXTENSION for extensions in this list.
+resource "azurerm_postgresql_flexible_server_configuration" "extensions" {
+  name      = "azure.extensions"
+  server_id = azurerm_postgresql_flexible_server.postgres.id
+  value     = "PG_TRGM,BTREE_GIN"
+}
